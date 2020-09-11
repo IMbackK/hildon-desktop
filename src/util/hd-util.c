@@ -353,7 +353,7 @@ hd_util_change_screen_orientation_real (MBWindowManager *wm,
 
   if (!randr_supported(wm))
     {
-      g_debug ("Server does not support RandR 1.3\n");
+      printf ("Server does not support RandR 1.3\n");
       return FALSE;
     }
 
@@ -361,7 +361,7 @@ hd_util_change_screen_orientation_real (MBWindowManager *wm,
 
   if (!res)
     {
-      g_warning ("Couldn't get RandR screen resources\n");
+      printf ("Couldn't get RandR screen resources\n");
       return FALSE;
     }
 
@@ -370,7 +370,7 @@ hd_util_change_screen_orientation_real (MBWindowManager *wm,
 
   if (crtc == ~0UL)
     {
-      g_warning ("Couldn't find CRTC to rotate\n");
+      printf ("Couldn't find CRTC to rotate\n");
       goto err_res;
     }
 
@@ -378,7 +378,7 @@ hd_util_change_screen_orientation_real (MBWindowManager *wm,
 
   if (!crtc_info)
     {
-      g_warning ("Couldn't find CRTC info\n");
+      printf ("Couldn't find CRTC info\n");
       goto err_res;
     }
 
@@ -389,7 +389,7 @@ hd_util_change_screen_orientation_real (MBWindowManager *wm,
     {
       if (do_change)
         {
-          g_debug ("Entering portrait mode");
+          printf ("Entering portrait mode\n");
           want = RR_Rotate_90;
           width = MIN(DisplayWidth (wm->xdpy, DefaultScreen (wm->xdpy)),
                       DisplayHeight (wm->xdpy, DefaultScreen (wm->xdpy)));
@@ -414,7 +414,7 @@ hd_util_change_screen_orientation_real (MBWindowManager *wm,
     {
       if (do_change)
         {
-          g_debug ("Leaving portrait mode");
+          printf ("Leaving portrait mode\n");
           want = RR_Rotate_0;
           width = MAX(DisplayWidth (wm->xdpy, DefaultScreen (wm->xdpy)),
                       DisplayHeight (wm->xdpy, DefaultScreen (wm->xdpy)));
@@ -446,30 +446,30 @@ hd_util_change_screen_orientation_real (MBWindowManager *wm,
     {
       if (!(crtc_info->rotations & want))
         {
-          g_warning ("CRTC does not support rotation (0x%.8X vs. 0x%.8X)",
+          printf ("CRTC does not support rotation (0x%.8X vs. 0x%.8X)\n",
                      crtc_info->rotations, want);
           goto err_crtc_info;
         }
 
       if (crtc_info->rotation == want)
         {
-          g_debug ("Requested rotation already active");
+          printf ("Requested rotation already active\n");
           goto err_crtc_info;
         }
 
       /* We must call glFinish here in order to be sure that OpenGL won't be
        * trying to render stuff while we do the transition - as this sometimes
        * causes rubbish to be displayed. */
-      glFinish();
+      //glFinish();
 
       /* Grab the server around rotation to prevent clients attempting to
        * draw at inopportune times. */
-      XGrabServer (wm->xdpy);
+      //XGrabServer (wm->xdpy);
       /* Stop windows being reconfigured */
-      XChangeProperty(wm->xdpy, wm->root_win->xwindow,
-                      wm->atoms[MBWM_ATOM_MAEMO_SUPPRESS_ROOT_RECONFIGURATION],
-                      XA_CARDINAL, 32, PropModeReplace,
-                      (unsigned char *)&one, 1);
+     // XChangeProperty(wm->xdpy, wm->root_win->xwindow,
+      //                wm->atoms[MBWM_ATOM_MAEMO_SUPPRESS_ROOT_RECONFIGURATION],
+      //                XA_CARDINAL, 32, PropModeReplace,
+       //               (unsigned char *)&one, 1);
 
       /* Disable the CRTC first, as it doesn't fit within our existing screen. */
       XRRSetCrtcConfig (wm->xdpy, res, crtc, crtc_info->timestamp, 0, 0, None,
@@ -486,8 +486,8 @@ hd_util_change_screen_orientation_real (MBWindowManager *wm,
        * window has been reconfigured */
 
       /* Allow clients to redraw. */
-      XUngrabServer (wm->xdpy);
-      XFlush (wm->xdpy);  /* <-- this is required to avoid a lock-up */
+      //XUngrabServer (wm->xdpy);
+     //XFlush (wm->xdpy);  /* <-- this is required to avoid a lock-up */
     }
 
   rv = TRUE;
@@ -502,7 +502,7 @@ err_res:
     {
       if (status != RRSetConfigSuccess)
         {
-          g_warning ("XRRSetCrtcConfig() failed: %d", status);
+          printf ("XRRSetCrtcConfig() failed: %d\n", status);
           return FALSE;
         }
 
