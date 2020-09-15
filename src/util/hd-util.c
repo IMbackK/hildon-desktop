@@ -7,6 +7,7 @@
 #include <X11/Xlib.h>
 #include <X11/extensions/Xrandr.h>
 #include <X11/extensions/Xcomposite.h>
+#include <stdlib.h>
 
 #include "hd-comp-mgr.h"
 #include "hd-wm.h"
@@ -351,6 +352,11 @@ hd_util_change_screen_orientation_real (MBWindowManager *wm,
   unsigned long one = 1;
   gboolean rv = FALSE;
 
+  if (goto_portrait)
+	  system("~/portait.sh");
+  else
+	  system("~/landscape.sh");
+  
   if (!randr_supported(wm))
     {
       printf ("Server does not support RandR 1.3\n");
