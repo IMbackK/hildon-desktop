@@ -166,6 +166,7 @@ else
 		       xft dnl
 		       libmatchbox2-0.1 dnl
 		       profile dnl
+		       xi dnl
 		       mce])
 fi
 

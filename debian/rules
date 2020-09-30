@@ -19,8 +19,7 @@ export DEB_CPPFLAGS_MAINT_APPEND DEB_CFLAGS_MAINT_APPEND
 export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
 
 CONFFLAGS += \
-	$(ENABLE_LAUNCHER) \
-	--enable-static-mb2=yes
+	$(ENABLE_LAUNCHER)
 
 override_dh_autoreconf:
 	dh_autoreconf --as-needed
